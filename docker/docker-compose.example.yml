@@ -1,0 +1,8 @@
+services:
+  mahamatra:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    restart: always
+    environment:
+      BOT_TOKEN: "token" # Modify this
