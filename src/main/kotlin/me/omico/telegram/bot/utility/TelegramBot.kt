@@ -2,7 +2,6 @@ package me.omico.telegram.bot.utility
 
 import eu.vendeli.tgbot.TelegramBot
 import eu.vendeli.tgbot.api.deleteMessage
-import eu.vendeli.tgbot.api.message
 import eu.vendeli.tgbot.core.ManualHandlingDsl
 import eu.vendeli.tgbot.interfaces.Action
 import eu.vendeli.tgbot.types.Chat
@@ -34,13 +33,8 @@ suspend fun TelegramBot.autoRetry(updatesHandler: UpdatesHandler) =
         }
     }
 
-suspend fun <ReturnType> Action<ReturnType>.sendToChatViaBot(chat: Chat, bot: TelegramBot) =
-    send(to = chat.id, via = bot)
+suspend fun <ReturnType> Action<ReturnType>.send(to: Chat, bot: TelegramBot) =
+    send(to = to.id, via = bot)
 
-context(ManualHandlingDsl)
-    suspend fun TelegramBot.sendMessage(chat: Chat, text: () -> String) =
-    message(text).sendToChatViaBot(chat, this@sendMessage)
-
-context(ManualHandlingDsl)
-    suspend fun TelegramBot.deleteMessage(message: Message) =
-    deleteMessage(message.messageId).sendToChatViaBot(message.chat, this@deleteMessage)
+suspend fun TelegramBot.deleteMessage(message: Message) =
+    deleteMessage(message.messageId).send(message.chat, this@deleteMessage)
