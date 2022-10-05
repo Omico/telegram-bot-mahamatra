@@ -7,51 +7,67 @@ import eu.vendeli.tgbot.api.chat.declineChatJoinRequest
 import eu.vendeli.tgbot.api.message
 import eu.vendeli.tgbot.core.ManualHandlingDsl
 import eu.vendeli.tgbot.types.ChatJoinRequest
+import eu.vendeli.tgbot.types.internal.ActionContext
 import eu.vendeli.tgbot.utils.inlineKeyboardMarkup
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import me.omico.telegram.bot.utility.deleteMessage
+import me.omico.telegram.bot.utility.sendTimeLimited
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 fun ManualHandlingDsl.setupVerification(bot: TelegramBot) {
     onChatJoinRequest {
-        val user = data.from
-        message { "你好，你需要回答以下问题来通过验证。" }.send(to = user, via = bot)
-        val qa = verificationQAs.entries.random()
-        verificationMessage(data, qa.key, qa.value).send(to = user, via = bot)
+        coroutineScope {
+            launch {
+                message { "你好，你需要回答以下问题来通过验证。你有5分钟回答时间。" }
+                    .sendTimeLimited(duration = 5.minutes, to = data.from, via = bot)
+            }
+            launch {
+                randomVerificationMessage()
+                    .sendTimeLimited(duration = 5.minutes, to = data.from, via = bot)
+            }
+        }
     }
     onCallbackQuery {
-        val callbackData = data.data ?: return@onCallbackQuery
-        if (!callbackData.startsWith("verification")) return@onCallbackQuery
-        bot.deleteMessage(data.message ?: return@onCallbackQuery)
-        val (type, chatId) = callbackData.split(":")
-        when (type) {
-            "verification_failed" -> {
-                declineChatJoinRequest("${data.from.id}")
-                    .send(to = chatId, via = bot)
-                message { "验证失败，你已被拒绝加入。" }.send(to = data.from, via = bot)
+        coroutineScope {
+            val callbackData = data.data ?: return@coroutineScope
+            if (!callbackData.startsWith("verification")) return@coroutineScope
+            bot.deleteMessage(data.message ?: return@coroutineScope)
+            val (type, chatId) = callbackData.split(":")
+            when (type) {
+                "verification_failed" -> {
+                    launch { declineChatJoinRequest("${data.from.id}").send(to = chatId, via = bot) }
+                    launch {
+                        message { "回答错误，你已被拒绝加入。" }
+                            .sendTimeLimited(duration = 5.seconds, to = data.from, via = bot)
+                    }
+                }
+                "verification_succeeded" -> {
+                    launch { approveChatJoinRequest("${data.from.id}").send(to = chatId, via = bot) }
+                    launch {
+                        message { "回答正确，欢迎加入！" }
+                            .sendTimeLimited(duration = 5.seconds, to = data.from, via = bot)
+                    }
+                }
             }
-            "verification_succeeded" -> {
-                approveChatJoinRequest("${data.from.id}")
-                    .send(to = chatId, via = bot)
-                message { "验证成功。" }.send(to = data.from, via = bot)
-            }
-            else -> Unit
         }
     }
 }
 
-internal fun verificationMessage(
-    chatJoinRequest: ChatJoinRequest,
-    question: String,
-    choices: Set<Choice>,
-): SendMessageAction = message(question).markup {
-    inlineKeyboardMarkup {
-        choices.shuffled().forEach { choice ->
-            callbackData(choice.text) {
-                when {
-                    choice.correct -> "verification_succeeded:${chatJoinRequest.chat.id}"
-                    else -> "verification_failed:${chatJoinRequest.chat.id}"
+internal fun ActionContext<ChatJoinRequest>.randomVerificationMessage(): SendMessageAction = run {
+    val qa = verificationQAs.entries.random()
+    message(qa.key).markup {
+        inlineKeyboardMarkup {
+            qa.value.shuffled().forEach { choice ->
+                callbackData(choice.text) {
+                    when {
+                        choice.correct -> "verification_succeeded:${data.chat.id}"
+                        else -> "verification_failed:${data.chat.id}"
+                    }
                 }
+                newLine()
             }
-            newLine()
         }
     }
 }
