@@ -7,7 +7,10 @@ import eu.vendeli.tgbot.interfaces.sendAsync
 
 fun ManualHandlingDsl.setupBanForwardMessage(
     bot: TelegramBot,
-    chatIds: Set<Long> = setOf(BANNED_CHAT_ID_1), // TODO Load from configuration file
+    chatIds: Set<Long> = setOf(
+        BANNED_CHAT_ID_1,
+        BANNED_CHAT_ID_2,
+    ), // TODO Load from configuration file
 ) = onMessage {
     val message = data
     val forwardFromChat = message.forwardFromChat ?: return@onMessage
@@ -19,3 +22,4 @@ fun ManualHandlingDsl.setupBanForwardMessage(
 }
 
 private const val BANNED_CHAT_ID_1 = -1001761534525L
+private const val BANNED_CHAT_ID_2 = -1001881510191L
