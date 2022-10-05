@@ -44,7 +44,7 @@ internal fun verificationMessage(
     choices: Set<Choice>,
 ): SendMessageAction = message(question).markup {
     inlineKeyboardMarkup {
-        choices.forEach { choice ->
+        choices.shuffled().forEach { choice ->
             callbackData(choice.text) {
                 when {
                     choice.correct -> "verification_succeeded:${chatJoinRequest.chat.id}"
