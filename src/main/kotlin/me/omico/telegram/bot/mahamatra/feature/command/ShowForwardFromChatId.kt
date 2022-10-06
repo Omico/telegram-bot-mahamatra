@@ -7,6 +7,7 @@ import eu.vendeli.tgbot.core.ManualHandlingDsl
 import eu.vendeli.tgbot.interfaces.sendAsync
 import eu.vendeli.tgbot.types.ChatMember
 import eu.vendeli.tgbot.types.internal.getOrNull
+import me.omico.telegram.bot.utility.deleteMessage
 
 fun ManualHandlingDsl.setupShowForwardFromChatId(bot: TelegramBot) {
     onMessage {
@@ -18,7 +19,10 @@ fun ManualHandlingDsl.setupShowForwardFromChatId(bot: TelegramBot) {
             .sendAsync(to = message.chat.id, via = bot)
             .await()
             .getOrNull() ?: return@onMessage
-        if (chatMember !is ChatMember.Owner && chatMember !is ChatMember.Administrator) return@onMessage
+        if (chatMember !is ChatMember.Owner && chatMember !is ChatMember.Administrator) {
+            bot.deleteMessage(message)
+            return@onMessage
+        }
         val replyToMessage = message.replyToMessage ?: return@onMessage
         val forwardFromChat = replyToMessage.forwardFromChat ?: return@onMessage
         message("Message from ${forwardFromChat.id}").send(to = message.chat.id, via = bot)
