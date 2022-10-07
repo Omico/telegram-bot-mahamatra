@@ -12,6 +12,7 @@ import eu.vendeli.tgbot.utils.inlineKeyboardMarkup
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.omico.telegram.bot.utility.deleteMessage
+import me.omico.telegram.bot.utility.send
 import me.omico.telegram.bot.utility.sendTimeLimited
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -20,8 +21,14 @@ fun ManualHandlingDsl.setupVerification(bot: TelegramBot) {
     onChatJoinRequest {
         coroutineScope {
             launch {
-                message { "你好，你需要回答以下问题来通过验证。你有5分钟回答时间。" }
+                message { "你好，你需要回答以下问题来通过验证。" }
                     .sendTimeLimited(duration = 5.minutes, to = data.from, via = bot)
+            }
+            launch {
+                message { "你有5分钟回答时间。" }
+                    .send(to = data.from, via = bot, duration = 5.minutes) {
+                        declineChatJoinRequest("${data.from.id}").send(to = data.chat.id, via = bot)
+                    }
             }
             launch {
                 randomVerificationMessage()

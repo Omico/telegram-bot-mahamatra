@@ -43,17 +43,30 @@ suspend fun TelegramBot.autoRetry(updatesHandler: UpdatesHandler) =
 suspend fun <ReturnType> Action<ReturnType>.send(to: Chat, bot: TelegramBot) =
     send(to = to.id, via = bot)
 
-suspend fun Action<Message>.sendTimeLimited(duration: Duration, to: User, via: TelegramBot) {
+suspend fun Action<Message>.send(
+    to: User,
+    via: TelegramBot,
+    duration: Duration,
+    onTimeout: suspend (message: Message) -> Unit = {},
+) {
     coroutineScope {
         launch {
             val message = sendAsync(to = to, via = via).await().getOrNull() ?: return@launch
             withContext(Dispatchers.IO) {
                 delay(duration)
-                via.deleteMessage(message)
+                onTimeout(message)
             }
         }
     }
 }
+
+suspend fun Action<Message>.sendTimeLimited(duration: Duration, to: User, via: TelegramBot) =
+    send(
+        to = to,
+        via = via,
+        duration = duration,
+        onTimeout = via::deleteMessage,
+    )
 
 suspend fun TelegramBot.deleteMessage(message: Message) =
     deleteMessage(message.messageId).send(message.chat, this@deleteMessage)
