@@ -4,6 +4,8 @@ WORKDIR /mahamatra
 
 COPY . .
 
+RUN if [ -f local.properties ]; then rm local.properties; fi
+
 RUN gradle clean assemble --no-daemon
 
 FROM openjdk:18-slim-buster
