@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     application
     kotlin("jvm") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
 }
 
 group = "me.omico.telegram.bot.mahamatra"
@@ -35,6 +36,7 @@ dependencies {
     implementation("eu.vendeli:telegram-bot:2.2.1")
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     testImplementation(kotlin("test"))
 }
 

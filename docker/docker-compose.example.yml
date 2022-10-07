@@ -6,3 +6,5 @@ services:
     restart: always
     environment:
       BOT_TOKEN: "token" # Modify this
+    volumes:
+      - ./mahamatra.json:/mahamatra.json
