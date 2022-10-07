@@ -10,6 +10,7 @@ fun ManualHandlingDsl.setupBanForwardMessage(
     chatIds: Set<Long> = setOf(
         BANNED_CHAT_ID_1,
         BANNED_CHAT_ID_2,
+        BANNED_CHAT_ID_3,
     ), // TODO Load from configuration file
 ) = onMessage {
     val message = data
@@ -22,3 +23,4 @@ fun ManualHandlingDsl.setupBanForwardMessage(
 
 private const val BANNED_CHAT_ID_1 = -1001761534525L
 private const val BANNED_CHAT_ID_2 = -1001881510191L
+private const val BANNED_CHAT_ID_3 = -1001845049917L
