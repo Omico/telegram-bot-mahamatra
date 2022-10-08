@@ -7,4 +7,4 @@ services:
     environment:
       BOT_TOKEN: "token" # Modify this
     volumes:
-      - ./mahamatra.json:/mahamatra.json
+      - ./mahamatra.json:/mahamatra/mahamatra.json
