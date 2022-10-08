@@ -1,0 +1,9 @@
+*.md
+.gitignore
+.idea/
+.run/
+docker/
+gradle/
+gradlew
+gradlew.bat
+local.properties
