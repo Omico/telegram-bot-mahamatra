@@ -17,10 +17,16 @@ import kotlin.io.path.writeText
 @Serializable
 data class MahamatraConfiguration(
     val banForwardMessage: BanForwardMessage = BanForwardMessage(),
+    val banMessage: BanMessage = BanMessage(),
 ) {
     @Serializable
     data class BanForwardMessage(
         val chatIds: Set<Long> = emptySet(),
+    )
+
+    @Serializable
+    data class BanMessage(
+        val keywordsSet: Set<List<String>> = emptySet(),
     )
 }
 

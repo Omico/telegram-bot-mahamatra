@@ -7,6 +7,7 @@ import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.required
 import me.omico.telegram.bot.mahamatra.feature.ban.setupBanForwardMessage
+import me.omico.telegram.bot.mahamatra.feature.ban.setupBanMessage
 import me.omico.telegram.bot.mahamatra.feature.command.setupAddBanForwardMessageChatId
 import me.omico.telegram.bot.mahamatra.feature.command.setupReload
 import me.omico.telegram.bot.mahamatra.feature.command.setupShowForwardFromChatId
@@ -34,6 +35,7 @@ suspend fun main(arguments: Array<String>) {
             with(data) {
                 setupReload(bot)
                 setupBanForwardMessage(bot)
+                setupBanMessage(bot)
                 setupShowForwardFromChatId(bot)
                 setupAddBanForwardMessageChatId(bot)
             }
