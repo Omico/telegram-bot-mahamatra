@@ -46,7 +46,7 @@ suspend fun <ReturnType> Action<ReturnType>.send(to: Chat, bot: TelegramBot) =
     send(to = to.id, via = bot)
 
 suspend fun Action<Message>.send(
-    to: User,
+    to: Long,
     via: TelegramBot,
     duration: Duration,
     onTimeout: suspend (message: Message) -> Unit = {},
@@ -61,6 +61,26 @@ suspend fun Action<Message>.send(
         }
     }
 }
+
+suspend fun Action<Message>.send(
+    to: User,
+    via: TelegramBot,
+    duration: Duration,
+    onTimeout: suspend (message: Message) -> Unit = {},
+) = send(
+    to = to.id,
+    via = via,
+    duration = duration,
+    onTimeout = onTimeout,
+)
+
+suspend fun Action<Message>.sendTimeLimited(duration: Duration, to: Long, via: TelegramBot) =
+    send(
+        to = to,
+        via = via,
+        duration = duration,
+        onTimeout = via::deleteMessage,
+    )
 
 suspend fun Action<Message>.sendTimeLimited(duration: Duration, to: User, via: TelegramBot) =
     send(

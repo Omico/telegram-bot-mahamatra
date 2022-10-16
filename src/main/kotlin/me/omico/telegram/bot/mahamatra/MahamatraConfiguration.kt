@@ -37,7 +37,8 @@ var cachedConfiguration: MahamatraConfiguration = MahamatraConfiguration()
 suspend fun loadConfiguration(): MahamatraConfiguration =
     mutex.withLock {
         if (!path.exists()) return@withLock MahamatraConfiguration()
-        json.decodeFromString(path.readText())
+        json.decodeFromString<MahamatraConfiguration>(path.readText())
+            .also { cachedConfiguration = it }
     }
 
 suspend fun MahamatraConfiguration.save() =
@@ -46,7 +47,8 @@ suspend fun MahamatraConfiguration.save() =
 suspend fun modifyConfiguration(block: suspend MahamatraConfiguration.() -> MahamatraConfiguration) {
     coroutineScope {
         launch(Dispatchers.IO) {
-            loadConfiguration().block().save()
+            cachedConfiguration = cachedConfiguration.block()
+            cachedConfiguration.save()
         }
     }
 }
