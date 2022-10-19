@@ -93,14 +93,32 @@ suspend fun Action<Message>.sendTimeLimited(duration: Duration, to: User, via: T
 suspend fun TelegramBot.deleteMessage(message: Message) =
     deleteMessage(message.messageId).send(message.chat, this@deleteMessage)
 
-suspend fun TelegramBot.ifMessageFromChatOwnerOrAdministrator(message: Message): Boolean =
+context (TelegramBot)
+    suspend fun Message.ifMessageFromChatOwnerOrAdministrator(): Boolean =
     run {
-        println(message)
-        val user = message.from ?: return@run false
+        val user = from ?: return@run false
         val chatMember = getChatMember(user.id)
-            .sendAsync(to = message.chat.id, via = this)
+            .sendAsync(to = chat.id, via = this@TelegramBot)
             .await()
             .getOrNull() ?: return@run false
-        println(chatMember)
         chatMember is ChatMember.Owner || chatMember is ChatMember.Administrator
     }
+
+context (TelegramBot)
+    suspend fun Message.chatOwnerOrAdministratorOnly(
+    onFalse: suspend Message.() -> Unit = { deleteMessage(this@Message) },
+    onTrue: suspend Message.() -> Unit,
+) = when {
+    ifMessageFromChatOwnerOrAdministrator() -> onTrue()
+    else -> onFalse()
+}
+
+context (TelegramBot)
+    suspend fun Message.onCommand(
+    command: String,
+    handle: suspend Message.(text: String) -> Unit,
+) {
+    val text = text ?: return
+    if (!text.startsWith(command)) return
+    this@Message.handle(text)
+}

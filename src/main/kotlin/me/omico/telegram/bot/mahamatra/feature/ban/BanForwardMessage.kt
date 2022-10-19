@@ -8,13 +8,15 @@ import kotlinx.coroutines.launch
 import me.omico.telegram.bot.mahamatra.cachedConfiguration
 import me.omico.telegram.bot.utility.deleteMessage
 
-suspend fun Message.setupBanForwardMessage(bot: TelegramBot) =
+context (TelegramBot)
+    suspend fun Message.setupBanForwardMessage() {
     coroutineScope {
         launch {
             val forwardFromChat = forwardFromChat ?: return@launch
             if (forwardFromChat.id !in cachedConfiguration.banForwardMessage.chatIds) return@launch
-            bot.deleteMessage(this@setupBanForwardMessage)
+            deleteMessage(this@setupBanForwardMessage)
             banChatSenderChat(from?.id ?: return@launch)
-                .send(to = chat.id, via = bot)
+                .send(to = chat.id, via = this@TelegramBot)
         }
     }
+}

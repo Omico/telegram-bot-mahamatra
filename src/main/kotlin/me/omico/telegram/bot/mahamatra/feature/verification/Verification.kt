@@ -17,22 +17,23 @@ import me.omico.telegram.bot.utility.sendTimeLimited
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-fun ManualHandlingDsl.setupVerification(bot: TelegramBot) {
+context (TelegramBot)
+fun ManualHandlingDsl.setupVerification() {
     onChatJoinRequest {
         coroutineScope {
             launch {
                 message { "你好，你需要回答以下问题来通过验证。" }
-                    .sendTimeLimited(duration = 5.minutes, to = data.from, via = bot)
+                    .sendTimeLimited(duration = 5.minutes, to = data.from, via = this@TelegramBot)
             }
             launch {
                 message { "你有5分钟回答时间。" }
-                    .send(to = data.from, via = bot, duration = 5.minutes) {
-                        declineChatJoinRequest("${data.from.id}").send(to = data.chat.id, via = bot)
+                    .send(to = data.from, via = this@TelegramBot, duration = 5.minutes) {
+                        declineChatJoinRequest("${data.from.id}").send(to = data.chat.id, via = this@TelegramBot)
                     }
             }
             launch {
                 randomVerificationMessage()
-                    .sendTimeLimited(duration = 5.minutes, to = data.from, via = bot)
+                    .sendTimeLimited(duration = 5.minutes, to = data.from, via = this@TelegramBot)
             }
         }
     }
@@ -40,21 +41,21 @@ fun ManualHandlingDsl.setupVerification(bot: TelegramBot) {
         coroutineScope {
             val callbackData = data.data ?: return@coroutineScope
             if (!callbackData.startsWith("verification")) return@coroutineScope
-            bot.deleteMessage(data.message ?: return@coroutineScope)
+            deleteMessage(data.message ?: return@coroutineScope)
             val (type, chatId) = callbackData.split(":")
             when (type) {
                 "verification_failed" -> {
-                    launch { declineChatJoinRequest("${data.from.id}").send(to = chatId, via = bot) }
+                    launch { declineChatJoinRequest("${data.from.id}").send(to = chatId, via = this@TelegramBot) }
                     launch {
                         message { "回答错误，你已被拒绝加入。" }
-                            .sendTimeLimited(duration = 5.seconds, to = data.from, via = bot)
+                            .sendTimeLimited(duration = 5.seconds, to = data.from, via = this@TelegramBot)
                     }
                 }
                 "verification_succeeded" -> {
-                    launch { approveChatJoinRequest("${data.from.id}").send(to = chatId, via = bot) }
+                    launch { approveChatJoinRequest("${data.from.id}").send(to = chatId, via = this@TelegramBot) }
                     launch {
                         message { "回答正确，欢迎加入！" }
-                            .sendTimeLimited(duration = 5.seconds, to = data.from, via = bot)
+                            .sendTimeLimited(duration = 5.seconds, to = data.from, via = this@TelegramBot)
                     }
                 }
             }

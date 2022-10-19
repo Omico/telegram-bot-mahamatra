@@ -30,14 +30,16 @@ suspend fun main(arguments: Array<String>) {
     )
     loadConfiguration()
     bot.autoRetry {
-        setupVerification(bot)
-        onMessage {
-            with(data) {
-                setupReload(bot)
-                setupBanForwardMessage(bot)
-                setupBanMessage(bot)
-                setupShowForwardFromChatId(bot)
-                setupAddBanForwardMessageChatId(bot)
+        with(bot) {
+            setupVerification()
+            onMessage {
+                with(data) {
+                    setupReload()
+                    setupBanForwardMessage()
+                    setupBanMessage()
+                    setupAddBanForwardMessageChatId()
+                    setupShowForwardFromChatId()
+                }
             }
         }
     }

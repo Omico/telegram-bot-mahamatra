@@ -7,7 +7,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.omico.telegram.bot.mahamatra.cachedConfiguration
 
-suspend fun Message.setupBanMessage(bot: TelegramBot) =
+context (TelegramBot)
+    suspend fun Message.setupBanMessage() {
     coroutineScope {
         launch {
             val text = text ?: return@launch
@@ -17,9 +18,10 @@ suspend fun Message.setupBanMessage(bot: TelegramBot) =
                         userId = from?.id ?: return@launch,
                         untilDate = null,
                         revokeMessages = true,
-                    ).send(to = chat.id, via = bot)
+                    ).send(to = chat.id, via = this@TelegramBot)
                     return@launch
                 }
             }
         }
     }
+}
