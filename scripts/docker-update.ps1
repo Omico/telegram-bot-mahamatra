@@ -10,7 +10,8 @@ function Test-Command($Command = $null) {
 }
 
 if (Test-Command("git")) {
-    git pull
+    git fetch
+    git reset --hard origin/main
 }
 else {
     Write-Host "Git does not exist."
