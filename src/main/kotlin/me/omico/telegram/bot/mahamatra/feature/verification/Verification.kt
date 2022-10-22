@@ -27,7 +27,8 @@ fun ManualHandlingDsl.setupVerification() {
             }
             launch {
                 message { "你有5分钟回答时间。" }
-                    .send(to = data.from, via = this@TelegramBot, duration = 5.minutes) {
+                    .send(to = data.from, via = this@TelegramBot, duration = 5.minutes) { message ->
+                        deleteMessage(message)
                         declineChatJoinRequest("${data.from.id}").send(to = data.chat.id, via = this@TelegramBot)
                     }
             }
