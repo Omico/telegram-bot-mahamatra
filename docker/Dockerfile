@@ -1,6 +1,6 @@
 FROM gradle:jdk18-alpine as builder
 
-WORKDIR /mahamatra
+WORKDIR /builder
 
 COPY . .
 
@@ -8,10 +8,10 @@ RUN gradle clean assemble --no-daemon
 
 FROM openjdk:18-slim-buster
 
-WORKDIR /mahamatra
+WORKDIR /bot
 
-COPY --from=builder /mahamatra/build/distributions/MahamatraBot*.tar MahamatraBot.tar
+COPY --from=builder /builder/build/distributions/MahamatraBot*.tar MahamatraBot.tar
 
-RUN tar -xvf MahamatraBot.tar
+RUN tar -xvf MahamatraBot.tar --directory=. --strip-components=1
 
-CMD ["sh", "-c", "./MahamatraBot*/bin/MahamatraBot --token $BOT_TOKEN"]
+CMD ["sh", "-c", "./bin/MahamatraBot --token $BOT_TOKEN"]
