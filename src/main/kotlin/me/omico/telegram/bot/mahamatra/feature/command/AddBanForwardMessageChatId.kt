@@ -13,7 +13,7 @@ import kotlin.time.Duration.Companion.seconds
 private const val COMMAND_ADD_BAN_FORWARD_MESSAGE_CHAT_ID = "/add_ban_forward_message_chat_id"
 
 context (TelegramBot)
-    suspend fun Message.setupAddBanForwardMessageChatId() =
+suspend fun Message.setupAddBanForwardMessageChatId() =
     onCommand(COMMAND_ADD_BAN_FORWARD_MESSAGE_CHAT_ID) { text ->
         chatOwnerOrAdministratorOnly {
             runCatching { addBanForwardMessageChatId(text) }

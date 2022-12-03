@@ -9,7 +9,7 @@ import me.omico.telegram.bot.mahamatra.cachedConfiguration
 import me.omico.telegram.bot.utility.deleteMessage
 
 context (TelegramBot)
-    suspend fun Message.setupBanForwardMessage() {
+suspend fun Message.setupBanForwardMessage() {
     coroutineScope {
         launch {
             val forwardFromChat = forwardFromChat ?: return@launch

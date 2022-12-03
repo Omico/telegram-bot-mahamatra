@@ -94,7 +94,7 @@ suspend fun TelegramBot.deleteMessage(message: Message) =
     deleteMessage(message.messageId).send(message.chat, this@deleteMessage)
 
 context (TelegramBot)
-    suspend fun Message.ifMessageFromChatOwnerOrAdministrator(): Boolean =
+suspend fun Message.ifMessageFromChatOwnerOrAdministrator(): Boolean =
     run {
         val user = from ?: return@run false
         val chatMember = getChatMember(user.id)
@@ -105,7 +105,7 @@ context (TelegramBot)
     }
 
 context (TelegramBot)
-    suspend fun Message.chatOwnerOrAdministratorOnly(
+suspend fun Message.chatOwnerOrAdministratorOnly(
     onFalse: suspend Message.() -> Unit = { deleteMessage(this@Message) },
     onTrue: suspend Message.() -> Unit,
 ) = when {
@@ -114,7 +114,7 @@ context (TelegramBot)
 }
 
 context (TelegramBot)
-    suspend fun Message.onCommand(
+suspend fun Message.onCommand(
     command: String,
     handle: suspend Message.(text: String) -> Unit,
 ) {

@@ -11,7 +11,7 @@ import me.omico.telegram.bot.utility.sendTimeLimited
 import kotlin.time.Duration.Companion.seconds
 
 context (TelegramBot)
-    suspend fun Message.setupReload() =
+suspend fun Message.setupReload() =
     onCommand("/reload") {
         chatOwnerOrAdministratorOnly {
             deleteMessage(this)

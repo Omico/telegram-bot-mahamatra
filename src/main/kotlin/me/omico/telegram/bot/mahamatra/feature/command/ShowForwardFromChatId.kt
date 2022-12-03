@@ -9,7 +9,7 @@ import me.omico.telegram.bot.utility.sendTimeLimited
 import kotlin.time.Duration.Companion.minutes
 
 context (TelegramBot)
-    suspend fun Message.setupShowForwardFromChatId() =
+suspend fun Message.setupShowForwardFromChatId() =
     onCommand("/show_forward_from_chat_id") {
         chatOwnerOrAdministratorOnly {
             when (val forwardFromChat = replyToMessage?.forwardFromChat) {
