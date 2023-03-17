@@ -5,11 +5,10 @@ import eu.vendeli.tgbot.api.chat.getChatMember
 import eu.vendeli.tgbot.api.deleteMessage
 import eu.vendeli.tgbot.core.ManualHandlingDsl
 import eu.vendeli.tgbot.interfaces.Action
-import eu.vendeli.tgbot.interfaces.sendAsync
-import eu.vendeli.tgbot.types.Chat
-import eu.vendeli.tgbot.types.ChatMember
 import eu.vendeli.tgbot.types.Message
 import eu.vendeli.tgbot.types.User
+import eu.vendeli.tgbot.types.chat.Chat
+import eu.vendeli.tgbot.types.chat.ChatMember
 import eu.vendeli.tgbot.types.internal.getOrNull
 import io.ktor.client.network.sockets.ConnectTimeoutException
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +28,8 @@ suspend fun TelegramBot.autoRetry(updatesHandler: UpdatesHandler) =
             val result = runCatching {
                 println("Handle Updates...")
                 handleUpdates(updatesHandler)
+            }.onFailure {
+                it.printStackTrace()
             }
             val exception = result.exceptionOrNull() ?: return@coroutineScope
             when (exception) {

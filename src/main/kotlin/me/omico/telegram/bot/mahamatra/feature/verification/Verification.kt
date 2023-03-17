@@ -6,9 +6,9 @@ import eu.vendeli.tgbot.api.chat.approveChatJoinRequest
 import eu.vendeli.tgbot.api.chat.declineChatJoinRequest
 import eu.vendeli.tgbot.api.message
 import eu.vendeli.tgbot.core.ManualHandlingDsl
-import eu.vendeli.tgbot.types.ChatJoinRequest
+import eu.vendeli.tgbot.types.chat.ChatJoinRequest
 import eu.vendeli.tgbot.types.internal.ActionContext
-import eu.vendeli.tgbot.utils.inlineKeyboardMarkup
+import eu.vendeli.tgbot.utils.builders.inlineKeyboardMarkup
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.omico.telegram.bot.utility.deleteMessage
