@@ -11,6 +11,7 @@ import eu.vendeli.tgbot.types.internal.ActionContext
 import eu.vendeli.tgbot.utils.builders.inlineKeyboardMarkup
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import me.omico.telegram.bot.mahamatra.cachedConfiguration
 import me.omico.telegram.bot.utility.deleteMessage
 import me.omico.telegram.bot.utility.send
 import me.omico.telegram.bot.utility.sendTimeLimited
@@ -20,6 +21,7 @@ import kotlin.time.Duration.Companion.seconds
 context (TelegramBot)
 fun ManualHandlingDsl.setupVerification() {
     onChatJoinRequest {
+        if (data.chat.id !in cachedConfiguration.verification.allowGroups) return@onChatJoinRequest
         coroutineScope {
             launch {
                 message { "你好，你需要回答以下问题来通过验证。" }

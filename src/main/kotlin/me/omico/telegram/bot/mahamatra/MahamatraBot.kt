@@ -10,6 +10,8 @@ import me.omico.telegram.bot.mahamatra.feature.ban.setupBanForwardMessage
 import me.omico.telegram.bot.mahamatra.feature.ban.setupBanMessage
 import me.omico.telegram.bot.mahamatra.feature.command.setupAddBanForwardMessageChatId
 import me.omico.telegram.bot.mahamatra.feature.command.setupBanThis
+import me.omico.telegram.bot.mahamatra.feature.command.setupGetGroupId
+import me.omico.telegram.bot.mahamatra.feature.command.setupManageJoinRequests
 import me.omico.telegram.bot.mahamatra.feature.command.setupReload
 import me.omico.telegram.bot.mahamatra.feature.command.setupShowForwardFromChatId
 import me.omico.telegram.bot.mahamatra.feature.verification.setupVerification
@@ -41,6 +43,8 @@ suspend fun main(arguments: Array<String>) {
                     setupBanMessage()
                     setupAddBanForwardMessageChatId()
                     setupShowForwardFromChatId()
+                    setupGetGroupId()
+                    setupManageJoinRequests()
                 }
             }
         }

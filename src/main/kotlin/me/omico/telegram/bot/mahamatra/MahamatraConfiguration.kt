@@ -18,6 +18,7 @@ import kotlin.io.path.writeText
 data class MahamatraConfiguration(
     val banForwardMessage: BanForwardMessage = BanForwardMessage(),
     val banMessage: BanMessage = BanMessage(),
+    val verification: Verification = Verification(),
 ) {
     @Serializable
     data class BanForwardMessage(
@@ -27,6 +28,11 @@ data class MahamatraConfiguration(
     @Serializable
     data class BanMessage(
         val keywordsSet: Set<List<String>> = emptySet(),
+    )
+
+    @Serializable
+    data class Verification(
+        val allowGroups: Set<Long> = emptySet(),
     )
 }
 
