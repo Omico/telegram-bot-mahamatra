@@ -6,7 +6,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.io.path.Path
@@ -18,6 +17,7 @@ import kotlin.io.path.writeText
 data class MahamatraConfiguration(
     val banForwardMessage: BanForwardMessage = BanForwardMessage(),
     val banMessage: BanMessage = BanMessage(),
+    val banUsername: BanUsername = BanUsername(),
     val verification: Verification = Verification(),
 ) {
     @Serializable
@@ -28,6 +28,11 @@ data class MahamatraConfiguration(
     @Serializable
     data class BanMessage(
         val keywordsSet: Set<List<String>> = emptySet(),
+    )
+
+    @Serializable
+    data class BanUsername(
+        val regexes: Set<String> = emptySet(),
     )
 
     @Serializable
