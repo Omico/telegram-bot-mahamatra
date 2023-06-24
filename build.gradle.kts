@@ -14,14 +14,10 @@ repositories {
 }
 
 kotlin {
-    target {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "11"
-                freeCompilerArgs = listOf(
-                    "-Xcontext-receivers",
-                )
-            }
+    jvmToolchain(17)
+    sourceSets {
+        all {
+            languageSettings.enableLanguageFeature("ContextReceivers")
         }
     }
 }

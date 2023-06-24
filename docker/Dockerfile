@@ -1,4 +1,4 @@
-FROM gradle:jdk18-alpine as builder
+FROM gradle:jdk17-alpine as builder
 
 WORKDIR /builder
 
@@ -6,7 +6,7 @@ COPY . .
 
 RUN gradle clean assemble --no-daemon
 
-FROM openjdk:18-slim-buster
+FROM openjdk:17-slim-buster
 
 WORKDIR /bot
 
