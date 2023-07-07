@@ -6,6 +6,7 @@ import eu.vendeli.tgbot.types.Message
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.omico.telegram.bot.mahamatra.cachedConfiguration
+import me.omico.telegram.bot.utility.deleteMessage
 
 context (TelegramBot)
 suspend fun Message.setupBanMessage() {
@@ -14,6 +15,7 @@ suspend fun Message.setupBanMessage() {
             val text = text ?: return@launch
             cachedConfiguration.banMessage.keywordsSet.forEach { keywords ->
                 if (keywords.all { it in text }) {
+                    deleteMessage(this@setupBanMessage)
                     banChatMember(
                         userId = from?.id ?: return@launch,
                         untilDate = null,
