@@ -31,7 +31,7 @@ fun ManualHandlingDsl.setupVerification() {
                 message { "你有5分钟回答时间。" }
                     .send(to = data.from, via = this@TelegramBot, duration = 5.minutes) { message ->
                         deleteMessage(message)
-                        declineChatJoinRequest("${data.from.id}").send(to = data.chat.id, via = this@TelegramBot)
+                        declineChatJoinRequest(data.from).send(to = data.chat.id, via = this@TelegramBot)
                     }
             }
             launch {
@@ -48,14 +48,14 @@ fun ManualHandlingDsl.setupVerification() {
             val (type, chatId) = callbackData.split(":")
             when (type) {
                 "verification_failed" -> {
-                    launch { declineChatJoinRequest("${data.from.id}").send(to = chatId, via = this@TelegramBot) }
+                    launch { declineChatJoinRequest(data.from).send(to = chatId, via = this@TelegramBot) }
                     launch {
                         message { "回答错误，你已被拒绝加入。" }
                             .sendTimeLimited(duration = 5.seconds, to = data.from, via = this@TelegramBot)
                     }
                 }
                 "verification_succeeded" -> {
-                    launch { approveChatJoinRequest("${data.from.id}").send(to = chatId, via = this@TelegramBot) }
+                    launch { approveChatJoinRequest(data.from).send(to = chatId, via = this@TelegramBot) }
                     launch {
                         message { "回答正确，欢迎加入！" }
                             .sendTimeLimited(duration = 5.seconds, to = data.from, via = this@TelegramBot)
