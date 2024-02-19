@@ -37,7 +37,7 @@ suspend fun main(arguments: Array<String>) {
         with(bot) {
             setupVerification()
             onMessage {
-                with(data) {
+                with(update.message) {
                     setupReload()
                     setupBanThis()
                     setupBanForwardMessage()

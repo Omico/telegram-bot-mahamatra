@@ -12,7 +12,7 @@ context (TelegramBot)
 suspend fun Message.setupBanForwardMessage() {
     coroutineScope {
         launch {
-            val forwardFromChat = forwardFromChat ?: return@launch
+            val forwardFromChat = forwardOrigin?.fromChat ?: return@launch
             if (forwardFromChat.id !in cachedConfiguration.banForwardMessage.chatIds) return@launch
             deleteMessage(this@setupBanForwardMessage)
             banChatSenderChat(from?.id ?: return@launch)

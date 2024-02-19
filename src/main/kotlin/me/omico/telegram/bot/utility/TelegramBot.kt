@@ -3,13 +3,13 @@ package me.omico.telegram.bot.utility
 import eu.vendeli.tgbot.TelegramBot
 import eu.vendeli.tgbot.api.chat.getChatMember
 import eu.vendeli.tgbot.api.deleteMessage
-import eu.vendeli.tgbot.core.ManualHandlingDsl
 import eu.vendeli.tgbot.interfaces.Action
 import eu.vendeli.tgbot.types.Message
 import eu.vendeli.tgbot.types.User
 import eu.vendeli.tgbot.types.chat.Chat
 import eu.vendeli.tgbot.types.chat.ChatMember
 import eu.vendeli.tgbot.types.internal.getOrNull
+import eu.vendeli.tgbot.utils.FunctionalHandlingBlock
 import io.ktor.client.network.sockets.ConnectTimeoutException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -19,15 +19,13 @@ import kotlinx.coroutines.withContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-typealias UpdatesHandler = suspend ManualHandlingDsl.() -> Unit
-
-suspend fun TelegramBot.autoRetry(updatesHandler: UpdatesHandler) =
+suspend fun TelegramBot.autoRetry(updatesHandler: FunctionalHandlingBlock) =
     coroutineScope {
         var isFailure = true
         while (isFailure) {
             val result = runCatching {
                 println("Handle Updates...")
-                handleUpdates(updatesHandler)
+                handleUpdates(null, updatesHandler)
             }.onFailure {
                 it.printStackTrace()
             }

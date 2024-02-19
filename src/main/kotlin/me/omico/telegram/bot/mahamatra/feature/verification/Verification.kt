@@ -4,10 +4,11 @@ import eu.vendeli.tgbot.TelegramBot
 import eu.vendeli.tgbot.api.SendMessageAction
 import eu.vendeli.tgbot.api.chat.approveChatJoinRequest
 import eu.vendeli.tgbot.api.chat.declineChatJoinRequest
+import eu.vendeli.tgbot.api.deleteMessage
 import eu.vendeli.tgbot.api.message
-import eu.vendeli.tgbot.core.ManualHandlingDsl
-import eu.vendeli.tgbot.types.chat.ChatJoinRequest
-import eu.vendeli.tgbot.types.internal.ActionContext
+import eu.vendeli.tgbot.core.FunctionalHandlingDsl
+import eu.vendeli.tgbot.types.internal.ActivityCtx
+import eu.vendeli.tgbot.types.internal.ChatJoinRequestUpdate
 import eu.vendeli.tgbot.utils.builders.inlineKeyboardMarkup
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -19,8 +20,9 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 context (TelegramBot)
-fun ManualHandlingDsl.setupVerification() {
+fun FunctionalHandlingDsl.setupVerification() {
     onChatJoinRequest {
+        val data = update.chatJoinRequest
         if (data.chat.id !in cachedConfiguration.verification.allowGroups) return@onChatJoinRequest
         coroutineScope {
             launch {
@@ -42,9 +44,11 @@ fun ManualHandlingDsl.setupVerification() {
     }
     onCallbackQuery {
         coroutineScope {
+            val data = update.callbackQuery
             val callbackData = data.data ?: return@coroutineScope
             if (!callbackData.startsWith("verification")) return@coroutineScope
-            deleteMessage(data.message ?: return@coroutineScope)
+            val message = data.message ?: return@coroutineScope
+            deleteMessage(message.messageId).send(message.chat, this@TelegramBot)
             val (type, chatId) = callbackData.split(":")
             when (type) {
                 "verification_failed" -> {
@@ -66,15 +70,16 @@ fun ManualHandlingDsl.setupVerification() {
     }
 }
 
-internal fun ActionContext<ChatJoinRequest>.randomVerificationMessage(): SendMessageAction = run {
+internal fun ActivityCtx<ChatJoinRequestUpdate>.randomVerificationMessage(): SendMessageAction = run {
     val qa = verificationQAs.entries.random()
+    val chatId = update.chatJoinRequest.chat.id
     message(qa.key).markup {
         inlineKeyboardMarkup {
             qa.value.shuffled().forEach { choice ->
                 callbackData(choice.text) {
                     when {
-                        choice.correct -> "verification_succeeded:${data.chat.id}"
-                        else -> "verification_failed:${data.chat.id}"
+                        choice.correct -> "verification_succeeded:${chatId}"
+                        else -> "verification_failed:${chatId}"
                     }
                 }
                 newLine()

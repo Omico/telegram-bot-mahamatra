@@ -21,7 +21,7 @@ suspend fun Message.setupBanThis() =
             when (val replyToMessage = replyToMessage) {
                 null -> help()
                 else -> {
-                    val forwardFromChat = replyToMessage.forwardFromChat
+                    val forwardFromChat = replyToMessage.forwardOrigin?.fromChat
                     val sender = replyToMessage.from
                     when {
                         sender == null -> banSenderNotFoundError()
