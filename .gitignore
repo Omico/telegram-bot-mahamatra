@@ -1,8 +1,9 @@
-*.iml
 .DS_Store
-.gradle/
-.idea/
-build/
-docker-compose.yml
-local.properties
-mahamatra.json
+/.gradle
+/.idea
+/build
+/docker-compose.yml
+/local.properties
+/mahamatra.json
+
+!/.idea/detekt.xml
