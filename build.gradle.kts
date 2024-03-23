@@ -28,7 +28,7 @@ application {
 }
 
 dependencies {
-    val ktorVersion = "2.3.8"
+    val ktorVersion = "2.3.9"
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-logging:$ktorVersion")
     implementation("eu.vendeli:telegram-bot:5.0.4") {
