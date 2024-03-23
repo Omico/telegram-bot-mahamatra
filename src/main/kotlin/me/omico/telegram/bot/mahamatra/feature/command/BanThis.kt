@@ -2,7 +2,7 @@ package me.omico.telegram.bot.mahamatra.feature.command
 
 import eu.vendeli.tgbot.TelegramBot
 import eu.vendeli.tgbot.api.chat.banChatMember
-import eu.vendeli.tgbot.api.message
+import eu.vendeli.tgbot.api.message.message
 import eu.vendeli.tgbot.types.Message
 import eu.vendeli.tgbot.types.User
 import me.omico.telegram.bot.mahamatra.modifyConfiguration

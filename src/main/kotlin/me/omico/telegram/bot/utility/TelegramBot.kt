@@ -2,7 +2,7 @@ package me.omico.telegram.bot.utility
 
 import eu.vendeli.tgbot.TelegramBot
 import eu.vendeli.tgbot.api.chat.getChatMember
-import eu.vendeli.tgbot.api.deleteMessage
+import eu.vendeli.tgbot.api.message.deleteMessage
 import eu.vendeli.tgbot.interfaces.Action
 import eu.vendeli.tgbot.types.Message
 import eu.vendeli.tgbot.types.User

@@ -1,11 +1,11 @@
 package me.omico.telegram.bot.mahamatra.feature.verification
 
 import eu.vendeli.tgbot.TelegramBot
-import eu.vendeli.tgbot.api.SendMessageAction
 import eu.vendeli.tgbot.api.chat.approveChatJoinRequest
 import eu.vendeli.tgbot.api.chat.declineChatJoinRequest
-import eu.vendeli.tgbot.api.deleteMessage
-import eu.vendeli.tgbot.api.message
+import eu.vendeli.tgbot.api.message.SendMessageAction
+import eu.vendeli.tgbot.api.message.deleteMessage
+import eu.vendeli.tgbot.api.message.message
 import eu.vendeli.tgbot.core.FunctionalHandlingDsl
 import eu.vendeli.tgbot.types.internal.ActivityCtx
 import eu.vendeli.tgbot.types.internal.ChatJoinRequestUpdate

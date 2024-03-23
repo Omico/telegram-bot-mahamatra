@@ -1,7 +1,7 @@
 package me.omico.telegram.bot.mahamatra.feature.command
 
 import eu.vendeli.tgbot.TelegramBot
-import eu.vendeli.tgbot.api.message
+import eu.vendeli.tgbot.api.message.message
 import eu.vendeli.tgbot.types.Message
 import me.omico.telegram.bot.mahamatra.modifyConfiguration
 import me.omico.telegram.bot.utility.chatOwnerOrAdministratorOnly
