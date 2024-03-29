@@ -31,7 +31,7 @@ dependencies {
     val ktorVersion = "2.3.9"
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-logging:$ktorVersion")
-    implementation("eu.vendeli:telegram-bot:5.0.4") {
+    implementation("eu.vendeli:telegram-bot:5.0.5") {
         exclude(group = "io.ktor")
     }
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.6")
